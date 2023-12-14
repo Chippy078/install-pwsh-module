@@ -106,19 +106,22 @@ function repo {
     } else {
 
         try {
-            Write-LogLine "Cannot find the NuGet Repository so installing it now!"
+      			Write-Host "Cannot find the NuGet Repository so installing it now!"
+						Write-LogLine "Cannot find the NuGet Repository so installing it now!"
+						Start-Sleep 3
             Install-Package NuGet -Force -ErrorAction stop
             Write-LogLine "Setting Trust certificat"
             Set-PSRepository PSGallery -InstallationPolicy Trusted
-            Write-LogLine "NuGet Repository set as default"
-        
+            Write-LogLine "NuGet Repository is set as default"
+						 Write-Host " NuGet repository is set as default        
+						Start-Sleep 3
         }
         catch {
             $msg = "STOP The application has caught an error"
 
             Write-LogLine ($msg + "`n")
             Write-LogLine $_.Exception.Message
-            Write-Host "Open Log file to see Error message"
+            Write-Host "Open Log file to see Error message!"
             pause
             $global:returncode = 1;
         }
@@ -135,13 +138,16 @@ function install_module{
      if((Test-Path $global:modulefind)-eq $true){
 
         Write-LogLine "The $module Module is already installed."
+				Write-Host " The $module module is already installed."
 
      } else {
         try {
-        Write-LogLine "Installing $module from the WEB!"
+        Write-LogLine "Installing $module from the PowerShellGallary!"
+				Write-Host "Installing $module from the PowerShellGallery!"
         Install-Module -Name $module -AllowClobber -Force -ErrorAction Stop
-        start-sleep 3
-        Write-LogLine "$module installed!"
+        start-sleep 10
+				Write-Host "$module is now installed!"
+        Write-LogLine "$module is now installed!"
 
         
         }
@@ -151,7 +157,6 @@ function install_module{
 
             Write-LogLine ($msg + "`n")
             Write-LogLine $_.Exception.Message
-
             Write-Host "Open Log file to see Error message"
             pause
             $global:returncode = 1;
