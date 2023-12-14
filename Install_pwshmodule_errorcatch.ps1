@@ -87,13 +87,18 @@ $500 = "Unable to create item"
 $global:returncode = 0 # VCB 0 = succes , 1 = failed
 #----------------[ Param ]---------------------------------------------------------------------------------
 
-#{param($module)}
-$module = Read-Host "Module name"
 #----------------[ Global Vars ]---------------------------------------------------------------------------
 $global:rep = "C:\Program Files\WindowsPowerShell\Modules\Nuget"
 $global:reposit = "PSGallery"
-$global:modulefind = "C:\Program Files\WindowsPowerShell\Modules\$module"
 #-------------------(Function)------------------------------------------------------------------------------
+function name_info{
+
+    Write-host "If you don't know the name of te module then visit https://www.powershellgallery.com/"
+    Write-Host "Here you can find the name of the module your looking for"
+    pause
+    
+}
+
 function repo {
 
     if((Test-path $global:rep)-eq $true){
@@ -101,11 +106,11 @@ function repo {
     } else {
 
         try {
-            Write-LogLine "Cannot find Repository so installing it now!"
+            Write-LogLine "Cannot find the NuGet Repository so installing it now!"
             Install-Package NuGet -Force -ErrorAction stop
             Write-LogLine "Setting Trust certificat"
             Set-PSRepository PSGallery -InstallationPolicy Trusted
-            Write-LogLine "Repository set"
+            Write-LogLine "NuGet Repository set as default"
         
         }
         catch {
@@ -113,6 +118,8 @@ function repo {
 
             Write-LogLine ($msg + "`n")
             Write-LogLine $_.Exception.Message
+            Write-Host "Open Log file to see Error message"
+            pause
             $global:returncode = 1;
         }
     } 
@@ -120,6 +127,10 @@ function repo {
 
 function install_module{
 
+    #{param($module)}
+    $module = Read-Host "Module name"
+
+    $global:modulefind = "C:\Program Files\WindowsPowerShell\Modules\$module"
 
      if((Test-Path $global:modulefind)-eq $true){
 
@@ -131,14 +142,20 @@ function install_module{
         Install-Module -Name $module -AllowClobber -Force -ErrorAction Stop
         start-sleep 3
         Write-LogLine "$module installed!"
+
+        
         }
         catch {
 
-            $msg = "`n STOP The application has caught an error"
+            $msg = "`n STOP!! The application has caught an error"
 
             Write-LogLine ($msg + "`n")
             Write-LogLine $_.Exception.Message
+
+            Write-Host "Open Log file to see Error message"
+            pause
             $global:returncode = 1;
+            
         }
 
      } 
@@ -150,6 +167,7 @@ Set-logInit("Install Pwsh module from the Internet  _")
 Write-LogLine("$date Install Pwsh module from the Internet ")
 Write-Version  $version
 Write-Version $space
+name_info
 repo
 Start-Sleep 3
 install_module
