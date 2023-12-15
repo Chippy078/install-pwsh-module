@@ -106,22 +106,25 @@ function repo {
     } else {
 
         try {
-      			Write-Host "Cannot find the NuGet Repository so installing it now!"
-						Write-LogLine "Cannot find the NuGet Repository so installing it now!"
-						Start-Sleep 3
+            write-host "Cannot find the NuGet repository so installing it now!"
+            Write-LogLine "Cannot find the NuGet Repository so installing it now!"
+            Start-Sleep 3
             Install-Package NuGet -Force -ErrorAction stop
             Write-LogLine "Setting Trust certificat"
+            Write-Host "Setting Trust certificat"
             Set-PSRepository PSGallery -InstallationPolicy Trusted
             Write-LogLine "NuGet Repository is set as default"
-						 Write-Host " NuGet repository is set as default        
-						Start-Sleep 3
+            Write-Host "NuGet Repository is set as default"
+            Start-Sleep 3
         }
         catch {
+
             $msg = "STOP The application has caught an error"
 
             Write-LogLine ($msg + "`n")
             Write-LogLine $_.Exception.Message
-            Write-Host "Open Log file to see Error message!"
+            Write-Host "Open Log file to see Error message"
+            Write-logoutput
             pause
             $global:returncode = 1;
         }
@@ -138,26 +141,28 @@ function install_module{
      if((Test-Path $global:modulefind)-eq $true){
 
         Write-LogLine "The $module Module is already installed."
-				Write-Host " The $module module is already installed."
 
      } else {
         try {
-        Write-LogLine "Installing $module from the PowerShellGallary!"
-				Write-Host "Installing $module from the PowerShellGallery!"
+        Write-LogLine "Installing $module from the PowerShellGallery!"
+        Write-Host "Installing $module from the PowerShellGallery!"
         Install-Module -Name $module -AllowClobber -Force -ErrorAction Stop
-        start-sleep 10
-				Write-Host "$module is now installed!"
+        start-sleep 5
         Write-LogLine "$module is now installed!"
+        Write-Host "$module is now installed!"
+        Start-Sleep 5
 
         
         }
         catch {
 
             $msg = "`n STOP!! The application has caught an error"
+            $loc = "C:/Logs/VCB/"
 
             Write-LogLine ($msg + "`n")
             Write-LogLine $_.Exception.Message
             Write-Host "Open Log file to see Error message"
+            Write-logoutput
             pause
             $global:returncode = 1;
             
@@ -168,8 +173,8 @@ function install_module{
 
 
 #--------------------(Main)-----------------------------------------------------------------------------
-Set-logInit("Install Pwsh module from the Internet  _")
-Write-LogLine("$date Install Pwsh module from the Internet ")
+Set-logInit("Install Pwsh module from the PowerShellGallery  _")
+Write-LogLine("$date Install Pwsh module from the PowerShellGallery  ")
 Write-Version  $version
 Write-Version $space
 name_info
