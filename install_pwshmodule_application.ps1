@@ -88,22 +88,30 @@ $global:returncode = 0 # VCB 0 = succes , 1 = failed
 #----------------[ Param ]---------------------------------------------------------------------------------
 
 #{param($module)}
-$module = Read-Host "Module name"
-$input = Read-host "Choose local or web"
+#$module = Read-Host "Module name"
+#$input = Read-host "Choose local or web"
 #----------------[ Global Vars ]---------------------------------------------------------------------------
 $global:default = "C:\Program Files\WindowsPowerShell\Modules\"
-$global:module_excel = "C:\Program Files\WindowsPowerShell\Modules\ImportExcel"
 $global:zip = "C:\Temp\$module.zip"
 $global:des = "C:\Temp\"
 $global:move = "C:\Temp\$module"
 $global:falt = "Syntax Error!"
-
+$global:modulefind = "C:\Program Files\WindowsPowerShell\Modules\$module"
 #-------------------(Function)------------------------------------------------------------------------------
+function name_info{
+
+    Write-host "If you don't know the name of te module then visit https://www.powershellgallery.com/"
+    Write-Host "Here you can find the name of the module your looking for"
+    pause
+}
+
 function local {
     
-    If((Test-Path $global:module_excel)-eq $true){
+    If((Test-Path $global:modulefind)-eq $true){
         Write-LogLine "$module module found!"
-        Write-Host "$module module found!"
+        Write-Host "$module module found! `n"
+        Write-Host "Closing application."
+        Start-Sleep 3
     } else {
         try {
 
@@ -136,10 +144,14 @@ function local {
           
         } else {
             
-            Write-Host "$module.zip not found "
-            Write-Host "Place Zipped $module file in the Temp folder!!!"
+            Write-Host "$module.zip not found"
+            Write-Host "Place Zipped $module file in the Temp folder!!! `n"
             Write-LogLine "$module.zip not found "
-            Write-LogLine "Place Zipped $module file in the Temp folder!!!"
+            Write-LogLine "Place Zipped $module file in the Temp folder!!! `n"
+            Start-Sleep 3
+            Write-host "Press enter to close the application."
+            pause
+            Write-logoutput
             $global:returncode = 1;
         }
             
@@ -164,7 +176,8 @@ function web {
     if((Test-Path $global:modulefind)-eq $true){
 
        Write-LogLine "The $module Module is already installed."
-       Write-Host "The $module Module is already installed."s
+       Write-Host "The $module Module is already installed. `n"
+       Write-Host "Closing application."
 
     } else {
        try {
@@ -194,10 +207,13 @@ function web {
 }
 #--------------------(Main)-----------------------------------------------------------------------------
 Set-logInit("Install Powershell module Through Application  _")
-Write-LogLine("$date Install Poweshell module Through Application")
+Write-LogLine("$date Install Powershell module Through Application")
 Write-Version  $version
 Write-Version $space
-
+name_info
+Start-Sleep 1
+$module = Read-Host "Module name"
+$input = Read-host "Choose local or web"
 if($input -match "local"){
     Try {
     Write-LogLine "Running Application in local machine Modus"
